@@ -30,47 +30,61 @@ def main():
 
 @app.route('/api/register', methods=['POST'])
 def register():
-    name =request.json.get('name','')
-    email=request.json.get('email')
-    password=request.json.get('password')
+    try:
+            name =request.json.get('name','')
+            lastname = request.json.get('lastname','')
+            email=request.json.get('email')
+            password=request.json.get('password')
 
-    user = User.query.filter_by(email=email).first()
-    if user :
-        return jsonify({"msg": "usuario ya se encuentra registrado"})
+            user = User.query.filter_by(email=email).first()
+            if user :
+                return jsonify({"msg": "usuario ya se encuentra registrado"})
 
-    user = User() 
-    user.name= name
-    user.email= email
-    user.password = generate_password_hash(password)
-    user.save()
+            user = User() 
+            user.name= name
+            user.lastname= lastname
+            user.email= email
+            user.password = generate_password_hash(password)
+            user.save()
 
-    return jsonify({"msg": "User registrado"}), 200
+            return jsonify({"msg": "User registrado"}), 200
+    except Exception as e:
+            print(e)
+            return jsonify({"msg":"Mal registro"})
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    email = request.json.get('email')
-    password = request.json.get('password')
+    try:
+            email = request.json.get('email')
+            password = request.json.get('password')
 
-    user = User.query.filter_by(email = email).first()
-    if not user:
-        return jsonify({"msg":"El usuario o la pass no coinciden"}), 400
-    if not check_password_hash(user.password,password):
-        return jsonify({"msg":"El user o la pass no coinciden"}),400
-    access_token = create_access_token(identity= user.email)
+            user = User.query.filter_by(email = email).first()
+            if not user:
+                return jsonify({"msg":"El usuario o la pass no coinciden"}), 400
+            if not check_password_hash(user.password,password):
+                return jsonify({"msg":"El user o la pass no coinciden"}),400
+            access_token = create_access_token(identity= user.email)
 
-    data={
-            "access_token": access_token,
-            "user": user.serialize()
-        }
-    return jsonify(data)
+            data={
+                    "access_token": access_token,
+                    "user": user.serialize()
+                }
+            return jsonify(data)
+    except Exception as e:
+            print(e)
+            return jsonify({"msg":"Erroneo acceso de usuario"})
 
 @app.route('/api/user', methods=['GET'])
 @jwt_required()
 def user():
-    users = User.query.all()
-    users = list(map(lambda user: user.serialize(),users))
+    try:
+            users = User.query.all()
+            users = list(map(lambda user: user.serialize(),users))
 
-    return jsonify(users), 200
+            return jsonify(users), 200
+    except Exception as e:
+            print(e) 
+            return jsonify({"msg":"No existen usuarios"})
 
 with app.app_context():
     db.create_all()
