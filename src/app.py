@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 from werkzeug.security import generate_password_hash,check_password_hash
 from models import db, User
+from routes import users
 
 load_dotenv()
 
@@ -22,35 +23,36 @@ Migrate(app, db)
 CORS(app)
 jwt=JWTManager(app)
 
+app.register_blueprint(users.api,url_prefix='/api')
 
 @app.route('/')
 def main():
     return render_template('index.html')
 
 
-@app.route('/api/register', methods=['POST'])
-def register():
-    try:
-            name =request.json.get('name','')
-            lastname = request.json.get('lastname','')
-            email=request.json.get('email')
-            password=request.json.get('password')
-
-            user = User.query.filter_by(email=email).first()
-            if user :
-                return jsonify({"msg": "usuario ya se encuentra registrado"})
-
-            user = User() 
-            user.name= name
-            user.lastname= lastname
-            user.email= email
-            user.password = generate_password_hash(password)
-            user.save()
-
-            return jsonify({"msg": "User registrado"}), 200
-    except Exception as e:
-            print(e)
-            return jsonify({"msg":"Mal registro"})
+#@app.route('/api/register', methods=['POST'])
+#def register():
+#    try:
+#            name =request.json.get('name','')
+#            lastname = request.json.get('lastname','')
+#            email=request.json.get('email')
+#            password=request.json.get('password')
+#
+#            user = User.query.filter_by(email=email).first()
+#            if user :
+#                return jsonify({"msg": "usuario ya se encuentra registrado"})
+#
+#            user = User() 
+#            user.name= name
+#            user.lastname= lastname
+#            user.email= email
+#            user.password = generate_password_hash(password)
+#            user.save()
+#
+#            return jsonify({"msg": "User registrado"}), 200
+#    except Exception as e:
+#            print(e)
+#            return jsonify({"msg":"Mal registro"})
 
 @app.route('/api/login', methods=['POST'])
 def login():

@@ -8,6 +8,7 @@ class User(db.Model):
     lastname = db.Column(db.String(100))
     email = db.Column(db.String(100), nullable=False, unique=True)
     password =db.Column(db.String(100), nullable=False)
+    avatar =db.Column(db.String, nullable=False)
     isActive = db.Column(db.Boolean(),default=True)
 
 
@@ -18,6 +19,7 @@ class User(db.Model):
             "lastname":self.lastname,
             "email": self.email,
             "password": self.password,
+            "avatar":self.avatar,
             "isActive": self.isActive
 
         }

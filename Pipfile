@@ -12,6 +12,7 @@ flask-jwt-extended = "*"
 python-dotenv = "*"
 pymysql = "*"
 flask-mail = "*"
+cloudinary = "*"
 
 [dev-packages]
 
