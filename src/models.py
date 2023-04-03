@@ -4,22 +4,22 @@ db= SQLAlchemy()
 class User(db.Model):
     __tablename__='user'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    lastname = db.Column(db.String(100))
     email = db.Column(db.String(100), nullable=False, unique=True)
     password =db.Column(db.String(100), nullable=False)
     avatar =db.Column(db.String, nullable=False)
+    cv = db.Column(db.String(300), default="")
+    instagram = db.Column(db.String(100), default="")
     isActive = db.Column(db.Boolean(),default=True)
 
 
     def serialize(self):
         return{
             "id": self.id,
-            "name": self.name,
-            "lastname":self.lastname,
             "email": self.email,
             "password": self.password,
             "avatar":self.avatar,
+             "cv": self.cv,
+            "instagram": self.instagram,
             "isActive": self.isActive
 
         }
