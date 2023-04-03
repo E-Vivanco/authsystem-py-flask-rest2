@@ -20,7 +20,7 @@ class User(db.Model):
             "avatar":self.avatar,
              "cv": self.cv,
             "instagram": self.instagram,
-            "isActive": self.isActive
+            #"isActive": self.isActive
 
         }
     
